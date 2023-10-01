@@ -1,6 +1,7 @@
 #!/bin/bash
 cd rmdb
-if [ -f build ];then
+
+if [ -d build ];then
 rm -rf build
 fi
 
