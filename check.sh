@@ -1,12 +1,12 @@
 #!/bin/bash
-
+cd rmdb
 if [ -f build ];then
 rm -rf build
 fi
 
 mkdir build
 cd build
-cmake ..
+cmake .. 
 make 
 if [ $? == 0 ]; then 
 if [ -f bin/disk_manager_test ]; then
