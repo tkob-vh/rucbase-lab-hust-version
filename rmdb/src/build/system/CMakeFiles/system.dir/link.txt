@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsystem.a  CMakeFiles/system.dir/sm_manager.o
+/usr/bin/ranlib libsystem.a

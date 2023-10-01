@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/lru_replacer_test.dir/lru_replacer_test.o  -o lru_replacer_test   -L/home/kylin/rucbase-lab/src/build/replacer  liblru_replacer.a -lgtest_main 

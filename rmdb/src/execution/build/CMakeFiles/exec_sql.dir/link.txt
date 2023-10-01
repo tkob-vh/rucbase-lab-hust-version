@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/exec_sql.dir/exec_sql.cpp.o  -o exec_sql   -L/home/kylin/rucbase-lab/src/execution/build  libexecution.a -lparser -lgtest_main -lsystem -lrecord -lsystem -lrecord -ltransaction 

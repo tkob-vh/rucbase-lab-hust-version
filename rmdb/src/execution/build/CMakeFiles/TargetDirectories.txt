@@ -1,0 +1,4 @@
+/home/kylin/rucbase-lab/src/execution/build/CMakeFiles/edit_cache.dir
+/home/kylin/rucbase-lab/src/execution/build/CMakeFiles/rebuild_cache.dir
+/home/kylin/rucbase-lab/src/execution/build/CMakeFiles/exec_sql.dir
+/home/kylin/rucbase-lab/src/execution/build/CMakeFiles/execution.dir

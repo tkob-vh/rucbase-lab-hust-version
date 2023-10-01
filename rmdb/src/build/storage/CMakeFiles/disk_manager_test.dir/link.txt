@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/disk_manager_test.dir/disk_manager_test.o  -o disk_manager_test   -L/home/kylin/rucbase-lab/src/build/storage  libdisk.a -lgtest_main 
