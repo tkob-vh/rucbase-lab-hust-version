@@ -12,8 +12,8 @@ cmake .. > cmake_err.txt 2>&1 >/dev/null
 if [ $? == 0 ]; then 
 make > make_err.txt 2>&1 >/dev/null
 if [ $? == 0 ]; then 
-if [ -f bin/disk_manager_test ]; then
-chmod +x bin/disk_manager_teset
+if [ -f ./bin/disk_manager_test ]; then
+chmod +x ./bin/disk_manager_test
 ./bin/disk_manager_test
 else 
 echo "没有编译生成评测程序，请检查代码！"
