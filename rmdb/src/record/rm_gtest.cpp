@@ -172,8 +172,9 @@ TEST(RecordManagerTest, SimpleTest) {
         check_equal(file_handle.get(), mock);
     }
     assert(mock.size() == add_cnt - del_cnt);
-    std::cout << "insert " << add_cnt << '\n' << "delete " << del_cnt << '\n' << "update " << upd_cnt << '\n';
-    // clean up
+    //std::cout << "insert " << add_cnt << '\n' << "delete " << del_cnt << '\n' << "update " << upd_cnt << '\n';
+    std::cout << "insert records SUCCESS\n" << "delete records SUCCESS\n" << "update records SUCCESS\n";
+        // clean up
     rm_manager->close_file(file_handle.get());
     rm_manager->destroy_file(filename);
 }
