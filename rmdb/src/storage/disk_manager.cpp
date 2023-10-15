@@ -62,6 +62,10 @@ page_id_t DiskManager::AllocatePage(int fd) {
     // 简单的自增分配策略，指定文件的页面编号加1
 
   
+    assert(fd >= 0 && fd < MAX_FD);
+    return fd2pageno_[fd] ++; 
+}
+
 
 /**
  * @brief Deallocate page (operations like drop index/table)
