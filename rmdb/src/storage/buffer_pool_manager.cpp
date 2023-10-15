@@ -11,43 +11,7 @@ bool BufferPoolManager::FindVictimPage(frame_id_t *frame_id) {
     // 1.1 未满获得frame
     // 1.2 已满使用lru_replacer中的方法选择淘汰页面
 
-    if( free_list_.empty() ) {
-        *frame_id = free_list_.front();
-        free_list_.pop_front();
-        //Page *p = &pages_[*frame_id];
-        return true;
-    }
 
-    if(replacer_->Victim(frame_id)){
-            page_id_t victim_page_id = -1;
-
-            std::unordered_map<PageId, frame_id_t, PageIdHash>::iterator it;
-            for(it = page_table_.begin(); it != page_table_.end();++it){
-                if((*it).second == *frame_id){
-                    victim_page_id = (*it).first.page_no;
-                }
-            }
-            if(victim_page_id != -1){//说明这个victim对应的页仍然在buffer pool 里，并且我们拿到了page的编号
-                //找到buffer pool里面的这个页，看看它是否脏
-                Page *victim_page = &(pages_[*frame_id]);
-
-                if(victim_page->IsDirty()){
-                    /*
-                    FlushPage(victim_page->id_);//会发生死锁，故不可调函数
-                    */
-                    Page *page;
-                    if (page_table_.count(victim_page->id_) != 0) {//说明能在buffer pool里找到
-                        page = &pages_[page_table_[victim_page->id_]];
-                        disk_manager_->write_page(page->GetPageId().fd, page->GetPageId().page_no, page->GetData(), PAGE_SIZE);
-                        page->is_dirty_ = false;
-                    }
-                }
-                page_table_.erase(victim_page->id_);
-                }
-            return true;
-        }else{//找不到可以替换的页
-            return false;
-        }
 
     return false;
 }
@@ -67,28 +31,14 @@ void BufferPoolManager::UpdatePage(Page *page, PageId new_page_id, frame_id_t ne
 
     // 1 如果是脏页，写回磁盘，并且把dirty置为false
      
-    if(page->IsDirty()){
-        //原本此处调用flush_page()函数，但调用需要临时解锁操作，会带来并发冲突问题
-        //为了解决此问题，将flush_page()函数展开
-        PageId old_page_id = page->GetPageId();
-        if(page_table_.count(old_page_id) > 0){
-            frame_id_t fid = page_table_[old_page_id];
-            disk_manager_->write_page(old_page_id.fd, old_page_id.page_no, page->data_,PAGE_SIZE);   
-        }
-        page->is_dirty_ = false;
-    }
 
     // 2 更新page table
     //这里有个疑问：page在pages_数组中的位置是固定的，它的frame_id难道不应该是固定的吗？为什么还能改成新frame_id?
-    page_table_.erase(page->GetPageId());
-    page_table_.insert(std::make_pair(new_page_id,new_frame_id));
-    //if(new_page_id.page_no != INVALID_PAGE_ID)
-    //    page_table_[new_page_id] = new_frame_id;
      
 
     // 3 重置page的data，更新page id
-    page->ResetMemory();
-    page->id_ = new_page_id;
+
+    
 }
 
 /**
