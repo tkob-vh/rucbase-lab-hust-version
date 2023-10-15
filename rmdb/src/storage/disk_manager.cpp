@@ -28,14 +28,7 @@ void DiskManager::write_page(int fd, page_id_t page_no, const char *offset, int 
     // 注意处理异常
     //lseek
 
-/*     if( fd2path_.find(fd) == fd2path_.end() ) {
-        throw FileNotOpenError(fd);
-    }
- */    
-    lseek(fd, page_no * PAGE_SIZE, SEEK_SET);
-    if( write(fd, (void *)offset, num_bytes) != num_bytes ) {
-        throw UnixError();
-    }
+
 }
 
 /**
@@ -53,15 +46,6 @@ void DiskManager::read_page(int fd, page_id_t page_no, char *offset, int num_byt
     // 2.调用read()函数
     // 注意处理异常
 
-
-/*     if( fd2path_.find(fd) == fd2path_.end() ) {
-        throw FileNotOpenError(fd);
-    }
- */    
-    lseek(fd, page_no * PAGE_SIZE, SEEK_SET);
-    if( read(fd, (void *)offset, num_bytes) < 0 ) {
-        throw UnixError();
-    }
   
 }
 
@@ -77,9 +61,7 @@ page_id_t DiskManager::AllocatePage(int fd) {
     // Todo:
     // 简单的自增分配策略，指定文件的页面编号加1
 
-    assert(fd >= 0 && fd < MAX_FD);
-    return fd2pageno_[fd] ++; 
-}
+  
 
 /**
  * @brief Deallocate page (operations like drop index/table)
@@ -117,9 +99,7 @@ bool DiskManager::is_file(const std::string &path) {
     // Todo:
     // 用struct stat获取文件信息
 
-    struct stat st;
-    //return stat(path.c_str(), &st) == 0 && (S_IFREG ==(st.st_mode & S_IFMT));
-    return stat(path.c_str(), &st) == 0 && S_ISREG(st.st_mode);
+
 }
 
 /**
@@ -129,12 +109,8 @@ void DiskManager::create_file(const std::string &path) {
     // Todo:
     // 调用open()函数，使用O_CREAT模式
     // 注意不能重复创建相同文件
-    if(!is_file(path)) {
-        auto fd = open( path.c_str(), O_CREAT | O_RDWR, 0600);  //0x1ff
-        if (fd != -1) close(fd);
-    } else {
-        throw FileExistsError(path);
-    }
+
+
 
 }
 
@@ -146,23 +122,10 @@ void DiskManager::destroy_file(const std::string &path) {
     // 调用unlink()函数
     // 注意不能删除未关闭的文件
 
-    if (path2fd_.count(path.c_str()) == 0 && is_file(path) == 1) {
-        unlink(path.c_str());
-    } else {
-        throw FileNotFoundError(path);
-    }
 
-/*     if( !is_file(path) ) {
-        throw FileNotFoundError(path);
-    }
-    if( path2fd_.find(path) == path2fd_.end() ) {
-        if( unlink(path.c_str()) < 0 ) {
-            throw UnixError();
-        }
-    } else {
-        throw FileNotClosedError(path);
-    }
- */    
+
+
+
 }
 
 /**
