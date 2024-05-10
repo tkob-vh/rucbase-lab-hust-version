@@ -9,7 +9,7 @@ touch make_err.txt
 make > make_err.txt 2>&1 >/dev/null
 if [ $? == 0 ]; then 
 if [ -f ./bin/lru_replacer_test ]; then
-chmod +x ./bin/lur_replacer_test
+chmod +x ./bin/lru_replacer_test
 ./bin/lru_replacer_test --gtest_print_time=0
 fi 
 else 
