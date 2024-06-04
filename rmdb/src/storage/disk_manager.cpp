@@ -27,8 +27,12 @@ void DiskManager::write_page(int fd, page_id_t page_no, const char *offset, int 
     // 2.调用write()函数
     // 注意处理异常
     //lseek
-
-
+    if(lseek(fd, page_no * PAGE_SIZE, SEEK_SET) == -1) {
+        throw UnixError();
+    }
+    if(write(fd, offset, num_bytes) == -1) {
+        throw UnixError();
+    }
 }
 
 /**
@@ -45,7 +49,12 @@ void DiskManager::read_page(int fd, page_id_t page_no, char *offset, int num_byt
     // 1.lseek()定位到文件头，通过(fd,page_no)可以定位指定页面及其在磁盘文件中的偏移量
     // 2.调用read()函数
     // 注意处理异常
-
+    if(lseek(fd, page_no * PAGE_SIZE, SEEK_SET) == -1) {
+        throw UnixError();
+    }
+    if(read(fd, offset, num_bytes) == -1) {
+        throw UnixError();
+    }
   
 }
 
@@ -60,7 +69,7 @@ void DiskManager::read_page(int fd, page_id_t page_no, char *offset, int num_byt
 page_id_t DiskManager::AllocatePage(int fd) {
     // Todo:
     // 简单的自增分配策略，指定文件的页面编号加1
-
+    
     assert(fd >= 0 && fd < MAX_FD);
     return fd2pageno_[fd] ++; 
 }
@@ -101,7 +110,8 @@ void DiskManager::destroy_dir(const std::string &path) {
 bool DiskManager::is_file(const std::string &path) {
     // Todo:
     // 用struct stat获取文件信息
-
+    struct stat st;
+    return stat(path.c_str(), &st) == 0 && S_ISREG(st.st_mode);
 
 }
 
@@ -112,8 +122,14 @@ void DiskManager::create_file(const std::string &path) {
     // Todo:
     // 调用open()函数，使用O_CREAT模式
     // 注意不能重复创建相同文件
-
-
+    if( is_file(path) == 1 ) {
+        throw FileExistsError(path);
+    }
+    int fd = open(path.c_str(), O_CREAT, 0644);
+    if( fd == -1 ) {
+        throw UnixError();
+    }
+    close(fd);
 
 }
 
@@ -126,9 +142,20 @@ void DiskManager::destroy_file(const std::string &path) {
     // 注意不能删除未关闭的文件
 
 
+    // Judge if the file exists
+    if( is_file(path) == 0 ) { 
+        throw FileNotFoundError(path);
+    }
 
+    // Judge if the file is open
+    if(path2fd_.find(path) != path2fd_.end()){ 
+        throw UnixError();
+    }
 
-
+    // Delete the file
+    if(unlink(path.c_str()) == -1) {
+        throw UnixError();
+    }
 }
 
 /**
