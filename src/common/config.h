@@ -15,6 +15,7 @@
 #include <atomic>
 #include <chrono>  // NOLINT
 #include <cstdint>
+#include <string>
 
 /** Cycle detection is performed every CYCLE_DETECTION_INTERVAL milliseconds. */
 extern std::chrono::milliseconds cycle_detection_interval;
