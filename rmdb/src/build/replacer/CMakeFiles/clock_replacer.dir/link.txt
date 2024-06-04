@@ -1,2 +1,0 @@
-/usr/bin/ar qc libclock_replacer.a  CMakeFiles/clock_replacer.dir/lru_replacer.o CMakeFiles/clock_replacer.dir/clock_replacer.o
-/usr/bin/ranlib libclock_replacer.a

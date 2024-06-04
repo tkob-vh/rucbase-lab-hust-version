@@ -1,2 +1,0 @@
-/usr/bin/ar qc libdisk.a  CMakeFiles/disk.dir/disk_manager.o
-/usr/bin/ranlib libdisk.a
