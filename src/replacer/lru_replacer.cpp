@@ -17,9 +17,13 @@ bool LRUReplacer::Victim(frame_id_t *frame_id) {
     // Todo:
     //  利用lru_replacer中的LRUlist_,LRUHash_实现LRU策略
     //  选择合适的frame指定为淘汰页面,赋值给*frame_id
-
-
-    return true;
+    if(LRUlist_.size() != 0){
+        *frame_id = LRUlist_.back();
+        LRUlist_.pop_back();
+        LRUhash_.erase(*frame_id);
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -31,6 +35,11 @@ void LRUReplacer::Pin(frame_id_t frame_id) {
     // Todo:
     // 固定指定id的frame
     // 在数据结构中移除该frame
+    auto iter = LRUhash_.find(frame_id);
+    if(iter != LRUhash_.end()){
+        LRUlist_.erase(iter->second);
+        LRUhash_.erase(iter);
+    }
  
 
 }
@@ -43,6 +52,12 @@ void LRUReplacer::Unpin(frame_id_t frame_id) {
     // Todo:
     //  支持并发锁
     //  选择一个frame取消固定
+    std::scoped_lock lock{latch_};
+    auto iter = LRUhash_.find(frame_id);
+    if(iter == LRUhash_.end()){
+        LRUlist_.push_front(frame_id);
+        LRUhash_[frame_id] = LRUlist_.begin();
+    }
   
 
 }
