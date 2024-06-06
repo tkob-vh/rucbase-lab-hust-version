@@ -16,6 +16,7 @@ std::unique_ptr<RmRecord> RmFileHandle::get_record(const Rid &rid, Context *cont
     //printf("在get_record里面为%s\n",data_);
     std::unique_ptr<RmRecord> record_ptr(new RmRecord(size_,data_));
     return record_ptr;
+
 }
 
 /**
